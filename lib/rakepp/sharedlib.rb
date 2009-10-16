@@ -1,0 +1,2 @@
+class SharedLib < SourceLib
+end
