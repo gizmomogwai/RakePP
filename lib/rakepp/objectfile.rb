@@ -8,4 +8,7 @@ class ObjectFile
     @privateDefines = privateDefines
     compiler.addTasks(self)
   end
+  def depFile()
+    return "#{outFile}.dependencies"
+  end
 end

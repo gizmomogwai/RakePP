@@ -9,7 +9,6 @@ else
   ARCH = ''
 end
 
-
 require 'rakepp/cleaner'
 require 'rakepp/all'
 require 'rakepp/compiler'
