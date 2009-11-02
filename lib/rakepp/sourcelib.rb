@@ -17,11 +17,11 @@ class SourceLib
   end
 
   def tr_includes
-    res = @includes.collect
+    res = Array.new(@includes)
     LibHelper.tr_libs(libs).each do |lib|
-      if res.index(lib) == nil then
+      if !res.include?(lib) then
         lib.includes.each do |i|
-          res << i unless res.index(i) != nil
+          res << i unless res.include?(i)
         end
       end
     end

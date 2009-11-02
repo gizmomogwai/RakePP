@@ -20,6 +20,7 @@ class GccCompiler < Compiler
     applyTask = task "#{depFile}.apply" => depFile do |task|
       deps = YAML.load_file(depFile)
       outFile.enhance(deps)
+      depFileTask.enhance(deps[1..-1])
     end
 
     outFile.enhance([applyTask])

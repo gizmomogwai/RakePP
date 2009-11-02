@@ -22,7 +22,6 @@ spec = Gem::Specification.new do |s|
   EOF
   s.files = PKG_FILES.to_a
   s.require_path = 'lib'
-  s.autorequire = 'rakepp'
   #  s.has_rdoc = true
   s.author = "Christian Koestlin"
   s.email = 'gizmoATflopcodeDOTcom'
