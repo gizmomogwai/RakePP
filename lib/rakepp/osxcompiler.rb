@@ -5,9 +5,16 @@ class OsxCompiler < GccCompiler
     @gui = gui
   end
 
-  def startOfSharedLibCommand(libName)
-    puts libName
-    return "g++ #{ARCH} -dynamiclib -install_name #{File.basename(libName)}"
+  def startOfSourceLibCommand(outname, artifact)
+    return "libtool -static -arch_only #{ARCH} -o #{outname}"
+  end
+
+  def startOfSharedLibCommand(libName, artifact)
+    name = artifact.options[:name]
+    if name == nil
+      name = File.basename(libName)
+    end
+    return "g++ -arch #{ARCH} -dynamiclib -install_name #{name}"
   end
 
   def sharedExtension

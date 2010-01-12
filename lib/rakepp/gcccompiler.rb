@@ -41,9 +41,9 @@ class GccCompiler < Compiler
   def compiler(artifact)
     if ((artifact.source.fullPath.index(".cpp") != nil) ||
         (artifact.source.fullPath.index(".cxx") != nil)) then
-      return "g++ #{ARCH} #{OPTIMIZE} -fno-common -Wall -exceptions"
+      return "g++ -arch #{ARCH} #{OPTIMIZE} -Wall"
     else
-      return "gcc #{ARCH} #{OPTIMIZE} -fno-common -Wall"
+      return "gcc -arch #{ARCH} #{OPTIMIZE} -Wall"
     end
   end
 
@@ -77,6 +77,9 @@ class GccCompiler < Compiler
       f.write(deps.to_yaml)
     end
   end
+  def startOfSourceLibCommand(outName, artifact)
+    return "ar -r #{outName}"
+  end
 
 def addSourceLibTasks(artifact)
   outDir = File.join(@targetDir, artifact.name)
@@ -92,7 +95,7 @@ def addSourceLibTasks(artifact)
   artifact.outFile = outName
   desc "Create SourceLib #{outName}"
   theTask = file outName => objects do | task |
-    command = "ar -r #{outName}"
+    command = startOfSourceLibCommand(outName, artifact)
     objects.each do | o |
       command += " #{o}"
     end
@@ -117,7 +120,7 @@ def addSharedLibTasks(artifact)
   artifact.outFile = outName
   desc "Create SharedLib #{outName}"
   theTask = file outName => objects do | task |
-    command = startOfSharedLibCommand(outName)
+    command = startOfSharedLibCommand(outName, artifact)
     objects.each do |o|
       command += " #{o}"
     end
@@ -158,7 +161,7 @@ def addExeTasks(artifact)
   artifact.outFile = File.join(exesName, artifact.name + '.exe')
   desc "Create Exe #{artifact.outFile}"
   theTask = file artifact.outFile => objects do | task |
-    command = "g++ #{ARCH} -o #{artifact.outFile}"
+    command = "g++ -arch #{ARCH} -o #{artifact.outFile}"
     objects.each do |o|
       command += " #{o}"
     end

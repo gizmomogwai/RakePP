@@ -1,13 +1,13 @@
 require 'rakepp/os'
 
-OPTIMIZE = '-O3'
+#OPTIMIZE = '-O3'
 #OPTIMIZE = ''
 
-if OS.osx?
-  ARCH = '-arch i386 -O0 -gdwarf-2 -mfix-and-continue -fmessage-length=0'
-else
-  ARCH = ''
-end
+#if OS.osx?
+#  ARCH = '-arch i386 -O0 -gdwarf-2 -mfix-and-continue -fmessage-length=0'
+#else
+#  ARCH = ''
+#end
 
 require 'rakepp/cleaner'
 require 'rakepp/all'
