@@ -4,7 +4,7 @@ OPTIMIZE = '-O3'
 #OPTIMIZE = ''
 
 if OS.osx?
-  ARCH = '-arch i386 -O0 -gdwarf-2 -mfix-and-continue -fmessage-length=0'
+  ARCH = '-arch i386'
 else
   ARCH = ''
 end

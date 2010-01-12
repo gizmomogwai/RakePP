@@ -19,8 +19,10 @@ class GccCompiler < Compiler
 
     applyTask = task "#{depFile}.apply" => depFile do |task|
       deps = YAML.load_file(depFile)
-      outFile.enhance(deps)
-      depFileTask.enhance(deps[1..-1])
+      if (deps)
+        outFile.enhance(deps)
+        depFileTask.enhance(deps[1..-1])
+      end
     end
 
     outFile.enhance([applyTask])
@@ -64,7 +66,12 @@ class GccCompiler < Compiler
 
   def calcDependencies(artifact, taskToEnhance)
     source = artifact.source
-    deps = `#{compiler(artifact)} -MM #{defines(artifact)} #{includes(artifact)} #{source.fullPath}`
+    command = "#{compiler(artifact)} -MM #{defines(artifact)} #{includes(artifact)} #{source.fullPath}"
+    puts command
+    deps = `#{command}`
+    if deps.length == 0
+      raise 'cannot calc dependencies'
+    end
     deps = deps.gsub(/\\\n/,'').split()[1..-1]
     File.open(artifact.depFile, 'wb') do |f|
       f.write(deps.to_yaml)
