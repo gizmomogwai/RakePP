@@ -25,3 +25,9 @@ require 'rakepp/sourcefile'
 require 'rakepp/binarylib'
 require 'rakepp/framework'
 require 'rakepp/files'
+
+def dir(d)
+  file_create d do |t|
+    mkdir_p t.name if ! File.exist?(t.name)
+  end
+end
