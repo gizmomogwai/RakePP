@@ -1,7 +1,7 @@
 class OsxCompiler < GccCompiler
 
-  def initialize(defines, gui=true)
-    super('osx', defines)
+  def initialize(defines, gui=true, output_suffix='')
+    super("osx#{output_suffix}", defines)
     @gui = gui
   end
 
