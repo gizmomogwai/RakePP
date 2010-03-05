@@ -39,11 +39,15 @@ class GccCompiler < Compiler
   end
 
   def compiler(artifact)
+    a = ''
+    if ARCH.length > 0
+      a = "-arch #{ARCH}"
+    end
     if ((artifact.source.fullPath.index(".cpp") != nil) ||
         (artifact.source.fullPath.index(".cxx") != nil)) then
-      return "g++ -arch #{ARCH} #{OPTIMIZE} -Wall"
+      return "g++ #{a} #{OPTIMIZE} -Wall"
     else
-      return "gcc -arch #{ARCH} #{OPTIMIZE} -Wall"
+      return "gcc #{a} #{OPTIMIZE} -Wall"
     end
   end
 
