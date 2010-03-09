@@ -174,11 +174,11 @@ def addExeTasks(artifact)
       command += " #{o}"
     end
 
-    command += " -Wl,--start-group "
+    command += startOfLibs
     LibHelper.tr_libs(artifact.libs).each do |lib|
       command += addLib(task, lib)
     end
-    command += " -Wl,--end-group"
+    command += endOfLibs
 
     sh command
     doAdditionalWorkForExe(artifact)
@@ -190,7 +190,12 @@ def addExeTasks(artifact)
   All.add(artifact.outFile)
   directory exesName
 end
-
+  def startOfLibs
+    return ''
+  end
+  def endOfLibs
+    return ''
+  end
   def doAdditionalWorkForExe(artifact)
   end
   

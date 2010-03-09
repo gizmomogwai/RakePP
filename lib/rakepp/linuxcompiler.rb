@@ -29,4 +29,12 @@ class LinuxCompiler < GccCompiler
     end
   end
 
+  def startOfLibs
+    return ' -Wl,--start-group '
+  end
+
+  def endOfLibs
+    return ' -Wl,--end-group '
+  end
+
 end
