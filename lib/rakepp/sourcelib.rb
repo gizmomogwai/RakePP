@@ -1,7 +1,7 @@
 class SourceLib
-  attr_reader :name, :sources, :includes, :outFile, :libs, :privateDefines
+  attr_reader :name, :sources, :includes, :outFile, :libs, :privateDefines, :forceLib
   attr_writer :outFile, :privateDefines
-  def initialize(compiler, base, name, sources, libs, includes, privateDefines=[])
+  def initialize(compiler, base, name, sources, libs, includes, privateDefines=[], forceLib=false)
     @name = name
     @sources = sources
     @libs = libs
@@ -13,6 +13,7 @@ class SourceLib
       end
     end
     @privateDefines = privateDefines
+    @forceLib = forceLib
     compiler.addTasks(self)
   end
 

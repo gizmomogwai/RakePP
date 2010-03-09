@@ -11,4 +11,22 @@ class LinuxCompiler < GccCompiler
   def sharedExtension
     return 'so'
   end
+
+
+  def addLibPrefix(lib)
+    if lib.forceLib
+      return '-Wl,--whole-archive'
+    else
+      return ''
+    end
+  end
+
+  def addLibSuffix(lib)
+    if lib.forceLib
+      return '-Wl,--no-whole-archive'
+    else
+      return ''
+    end
+  end
+
 end

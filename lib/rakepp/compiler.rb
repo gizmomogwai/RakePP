@@ -1,10 +1,11 @@
 class Compiler
   attr_reader :targetDir
+
   def initialize(targetDir, defines)
     @targetDir = targetDir
     @defines = defines
-    puts "compiler with #{targetDir} #{ARCH}"
   end
+
   def addTasks(artifact)
     if (artifact.instance_of?(Exe)) then
       addExeTasks(artifact)
@@ -22,4 +23,6 @@ class Compiler
       raise "unknown type " + artifact.to_s
     end
   end
+
 end
+

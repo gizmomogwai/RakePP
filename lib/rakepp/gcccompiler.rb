@@ -38,16 +38,20 @@ class GccCompiler < Compiler
     All.addDepFile(depFile)
   end
 
-  def compiler(artifact)
-    a = ''
+  def arch
     if ARCH.length > 0
-      a = "-arch #{ARCH}"
+      return "-arch #{ARCH}"
     end
+    return ''
+  end
+
+  def compiler(artifact)
+    
     if ((artifact.source.fullPath.index(".cpp") != nil) ||
         (artifact.source.fullPath.index(".cxx") != nil)) then
-      return "g++ #{a} #{OPTIMIZE} -Wall"
+      return "g++ #{arch} #{OPTIMIZE} -Wall"
     else
-      return "gcc #{a} #{OPTIMIZE} -Wall"
+      return "gcc #{arch} #{OPTIMIZE} -Wall"
     end
   end
 
@@ -165,14 +169,16 @@ def addExeTasks(artifact)
   artifact.outFile = File.join(exesName, artifact.name + '.exe')
   desc "Create Exe #{artifact.outFile}"
   theTask = file artifact.outFile => objects do | task |
-    command = "g++ -arch #{ARCH} -o #{artifact.outFile}"
+    command = "g++ #{arch} -o #{artifact.outFile}"
     objects.each do |o|
       command += " #{o}"
     end
 
+    command += " -Wl,--start-group "
     LibHelper.tr_libs(artifact.libs).each do |lib|
       command += addLib(task, lib)
     end
+    command += " -Wl,--end-group"
 
     sh command
     doAdditionalWorkForExe(artifact)
@@ -185,25 +191,33 @@ def addExeTasks(artifact)
   directory exesName
 end
 
-def doAdditionalWorkForExe(artifact)
-end
-
-def addTransitiveLibraryPrerequisites(theTask, artifact)
-  LibHelper.tr_libs(artifact.libs).each do |lib|
-    theTask.prerequisites << lib.outFile unless lib.kind_of?(BinaryLib)
+  def doAdditionalWorkForExe(artifact)
   end
-end
-
-def addLib(task, lib)
-  if (lib.instance_of?(BinaryLib)) then
-    return " -L#{lib.path||'/usr/lib'} -l#{lib.name} "
-  elsif (lib.instance_of?(SourceLib)) then
-    return " -L#{targetDir}/libs -l#{lib.name}"
-  elsif (lib.instance_of?(SharedLib)) then
-    return " #{targetDir}/libs/#{lib.name}.so "
-  else
-    raise "#{lib} not supported"
+  
+  def addTransitiveLibraryPrerequisites(theTask, artifact)
+    LibHelper.tr_libs(artifact.libs).each do |lib|
+      theTask.prerequisites << lib.outFile unless lib.kind_of?(BinaryLib)
+    end
   end
-end
+  
+  def addLib(task, lib)
+    if (lib.instance_of?(BinaryLib)) then
+      return " -L#{lib.path||'/usr/lib'} -l#{lib.name} "
+    elsif (lib.instance_of?(SourceLib)) then
+      return "#{addLibPrefix(lib)} -L#{targetDir}/libs -l#{lib.name} #{addLibSuffix(lib)}"
+    elsif (lib.instance_of?(SharedLib)) then
+      return " #{targetDir}/libs/#{lib.name}.so "
+    else
+      raise "#{lib} not supported"
+    end
+  end
+
+  def addLibPrefix(lib)
+    return ''
+  end
+
+  def addLibSuffix(lib)
+    return ''
+  end
 
 end
