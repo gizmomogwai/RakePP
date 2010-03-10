@@ -5,5 +5,5 @@
 
 void l2() {
   l1();
-  std::cout << "l2" << std::endl;
+  std::cout << "l2: " << WHICH_SYSTEM << std::endl;
 }

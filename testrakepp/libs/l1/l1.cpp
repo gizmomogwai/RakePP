@@ -4,5 +4,5 @@
 #include "something.h"
 
 void l1() {
-  std::cout << "l1" << std::endl;
+  std::cout << "l1: " << WHICH_SYSTEM << std::endl;
 }

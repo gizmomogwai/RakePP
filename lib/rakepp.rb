@@ -15,6 +15,7 @@ require 'rakepp/sourcefile'
 require 'rakepp/binarylib'
 require 'rakepp/framework'
 require 'rakepp/files'
+require 'rakepp/crosstools'
 
 def dir(d)
   file_create d do |t|

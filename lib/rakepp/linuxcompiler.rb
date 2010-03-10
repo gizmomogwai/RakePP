@@ -1,7 +1,7 @@
 class LinuxCompiler < GccCompiler
 
-  def initialize(defines, output_suffix='')
-    super("linux#{output_suffix}", defines)
+  def initialize(defines, compileflags, output_suffix='')
+    super("linux#{output_suffix}", defines, compileflags)
   end
 
   def startOfSharedLibCommand(libName, artifact)

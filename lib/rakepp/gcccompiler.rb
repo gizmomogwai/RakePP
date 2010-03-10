@@ -38,20 +38,12 @@ class GccCompiler < Compiler
     All.addDepFile(depFile)
   end
 
-  def arch
-    if ARCH.length > 0
-      return "-arch #{ARCH}"
-    end
-    return ''
-  end
-
   def compiler(artifact)
-    
     if ((artifact.source.fullPath.index(".cpp") != nil) ||
         (artifact.source.fullPath.index(".cxx") != nil)) then
-      return "g++ #{arch} #{OPTIMIZE} -Wall"
+      return "g++ #{compileflags}"
     else
-      return "gcc #{arch} #{OPTIMIZE} -Wall"
+      return "gcc #{compileflags}"
     end
   end
 
@@ -89,33 +81,33 @@ class GccCompiler < Compiler
     return "ar -r #{outName}"
   end
 
-def addSourceLibTasks(artifact)
-  outDir = File.join(@targetDir, artifact.name)
+  def addSourceLibTasks(artifact)
+    outDir = File.join(@targetDir, artifact.name)
 
-  objects = []
-  artifact.sources.each do |source|
-    objects << ObjectFile.new(self, source, outDir, artifact.tr_includes, artifact.privateDefines).outFile
-  end
-
-  libsName = File.join(@targetDir, 'libs')
-  outName = File.join(libsName, "lib#{artifact.name}.a")
-
-  artifact.outFile = outName
-  desc "Create SourceLib #{outName}"
-  theTask = file outName => objects do | task |
-    command = startOfSourceLibCommand(outName, artifact)
-    objects.each do | o |
-      command += " #{o}"
+    objects = []
+    artifact.sources.each do |source|
+      objects << ObjectFile.new(self, source, outDir, artifact.tr_includes, artifact.privateDefines).outFile
     end
-    sh command
+
+    libsName = File.join(@targetDir, 'libs')
+    outName = File.join(libsName, "lib#{artifact.name}.a")
+
+    artifact.outFile = outName
+    desc "Create SourceLib #{outName}"
+    theTask = file outName => objects do | task |
+      command = startOfSourceLibCommand(outName, artifact)
+      objects.each do | o |
+        command += " #{o}"
+      end
+      sh command
+    end
+
+    addTransitiveLibraryPrerequisites(theTask, artifact)
+
+    file outName => [libsName]
+    All.add(outName)
+    directory libsName
   end
-
-  addTransitiveLibraryPrerequisites(theTask, artifact)
-
-  file outName => [libsName]
-  All.add(outName)
-  directory libsName
-end
 
 def addSharedLibTasks(artifact)
   outDir = File.join(@targetDir, artifact.name)
@@ -169,7 +161,7 @@ def addExeTasks(artifact)
   artifact.outFile = File.join(exesName, artifact.name + '.exe')
   desc "Create Exe #{artifact.outFile}"
   theTask = file artifact.outFile => objects do | task |
-    command = "g++ #{arch} -o #{artifact.outFile}"
+    command = "g++ #{compileflags} -o #{artifact.outFile}"
     objects.each do |o|
       command += " #{o}"
     end
@@ -198,13 +190,13 @@ end
   end
   def doAdditionalWorkForExe(artifact)
   end
-  
+
   def addTransitiveLibraryPrerequisites(theTask, artifact)
     LibHelper.tr_libs(artifact.libs).each do |lib|
       theTask.prerequisites << lib.outFile unless lib.kind_of?(BinaryLib)
     end
   end
-  
+
   def addLib(task, lib)
     if (lib.instance_of?(BinaryLib)) then
       return " -L#{lib.path||'/usr/lib'} -l#{lib.name} "

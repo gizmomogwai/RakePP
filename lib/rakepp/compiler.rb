@@ -1,9 +1,10 @@
 class Compiler
-  attr_reader :targetDir
+  attr_reader :targetDir, :compileflags
 
-  def initialize(targetDir, defines)
+  def initialize(targetDir, defines, compileflags)
     @targetDir = targetDir
     @defines = defines
+    @compileflags = compileflags
   end
 
   def addTasks(artifact)

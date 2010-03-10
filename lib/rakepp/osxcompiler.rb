@@ -1,12 +1,13 @@
 class OsxCompiler < GccCompiler
 
-  def initialize(defines, gui=true, output_suffix='')
-    super("osx#{output_suffix}", defines)
+  def initialize(defines, compileflags, architecture, gui=true, output_suffix='')
+    super("osx#{output_suffix}", defines, "#{compileflags} -arch #{architecture}")
+    @architecture = architecture
     @gui = gui
   end
 
   def startOfSourceLibCommand(outname, artifact)
-    return "libtool -static -arch_only #{ARCH} -o #{outname}"
+    return "libtool -static -arch_only #{@architecture} -o #{outname}"
   end
 
   def startOfSharedLibCommand(libName, artifact)
@@ -14,7 +15,7 @@ class OsxCompiler < GccCompiler
     if name == nil
       name = File.basename(libName)
     end
-    return "g++ -arch #{ARCH} -dynamiclib -install_name #{name}"
+    return "g++ -arch #{@architecture} -dynamiclib -install_name #{name}"
   end
 
   def sharedExtension

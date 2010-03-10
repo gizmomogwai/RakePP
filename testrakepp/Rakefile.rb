@@ -1,8 +1,7 @@
 require 'rubygems'
 require 'rakepp'
 
-
-compiler = OsxCompiler.new([], false)
+compiler = OsxCompiler.new(['WHICH_SYSTEM=1'], '-Wall', 'i386', false)
 
 base = 'libs/l1/'
 sources = Files.relative(base, '*.cpp')
