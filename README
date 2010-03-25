@@ -1,0 +1,7 @@
+RakePP is a collection of helper classes to work with cpp-projects in rake.
+It features different kinds of artifacts like:
+- binary-libraries
+- libraries built from source (as shared-libs or static-libs)
+- executables
+
+See the directory testrakepp for some small examples.
