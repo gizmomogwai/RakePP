@@ -12,16 +12,25 @@ class GccCompiler < Compiler
       calcDependencies(artifact, depFile)
     end
 
-    outFile = file outName => depFile do |task|
+    recreateDepFileTask = task "#{depFile}.recreate" do | task |
+      if (!File.exists?(depFile))
+        calcDependencies(artifact, depFile)
+      end
+      deps = YAML.load_file(depFile)
+      if (deps)
+        depFileTask.enhance(deps)
+      end
+    end
+
+    outFile = file outName => ["#{depFile}.recreate", depFile] do | task |
       command = "#{compiler(artifact)} -c #{defines(artifact)} #{includes(artifact)} -o #{outName} #{artifact.source.fullPath}"
       sh command
     end
-
-    applyTask = task "#{depFile}.apply" => depFile do |task|
+    
+    applyTask = task "#{outFile}.apply" => recreateDepFileTask do |task|
       deps = YAML.load_file(depFile)
       if (deps)
         outFile.enhance(deps)
-        depFileTask.enhance(deps[1..-1])
       end
     end
 
@@ -33,6 +42,7 @@ class GccCompiler < Compiler
     dirs = [artifact.targetDir, File.dirname(outName)]
     outFile.enhance(dirs)
     depFileTask.enhance(dirs)
+    recreateDepFileTask.enhance(dirs)
 
     All.addObject(artifact)
     All.addDepFile(depFile)
@@ -77,6 +87,7 @@ class GccCompiler < Compiler
       f.write(deps.to_yaml)
     end
   end
+  
   def startOfSourceLibCommand(outName, artifact)
     return "ar -r #{outName}"
   end

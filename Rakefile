@@ -4,7 +4,7 @@ require 'rake/gempackagetask'
 desc "Default Task"
 task :default => :package
 
-PKG_VERSION = '0.1.4'
+PKG_VERSION = '0.1.6'
 PKG_FILES = FileList[
     'lib/**/*.rb',
     '*.xml',
