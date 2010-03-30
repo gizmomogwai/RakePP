@@ -17,16 +17,21 @@ class GccCompiler < Compiler
         calcDependencies(artifact, depFile)
       end
       deps = YAML.load_file(depFile)
-      if (deps)
-        depFileTask.enhance(deps)
+      missing = deps.inject(false) do |memo, d|
+        memo || !File.exists?(d)
       end
+      if (missing)
+        calcDependencies(artifact, depFile)
+        deps = YAML.load_file(depFile)
+      end
+      depFileTask.enhance(deps)
     end
 
     outFile = file outName => ["#{depFile}.recreate", depFile] do | task |
       command = "#{compiler(artifact)} -c #{defines(artifact)} #{includes(artifact)} -o #{outName} #{artifact.source.fullPath}"
       sh command
     end
-    
+
     applyTask = task "#{outFile}.apply" => recreateDepFileTask do |task|
       deps = YAML.load_file(depFile)
       if (deps)
@@ -76,8 +81,7 @@ class GccCompiler < Compiler
 
   def calcDependencies(artifact, taskToEnhance)
     source = artifact.source
-    command = "#{compiler(artifact)} -MM #{defines(artifact)} #{includes(artifact)} #{source.fullPath}"
-    puts command
+    command = "#{compiler(artifact)} -M #{defines(artifact)} #{includes(artifact)} #{source.fullPath}"
     deps = `#{command}`
     if deps.length == 0
       raise 'cannot calc dependencies'
@@ -87,7 +91,7 @@ class GccCompiler < Compiler
       f.write(deps.to_yaml)
     end
   end
-  
+
   def startOfSourceLibCommand(outName, artifact)
     return "ar -r #{outName}"
   end
