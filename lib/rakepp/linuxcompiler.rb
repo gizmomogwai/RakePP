@@ -4,16 +4,16 @@ class LinuxCompiler < GccCompiler
     super("linux#{output_suffix}", defines, compileflags)
   end
 
-  def startOfSharedLibCommand(libName, artifact)
+  def start_of_shared_lib_command(libName, artifact)
     return "g++ -shared"
   end
 
-  def sharedExtension
+  def shared_extension()
     return 'so'
   end
 
 
-  def addLibPrefix(lib)
+  def add_lib_prefix(lib)
     if lib.forceLib
       return '-Wl,--whole-archive'
     else
@@ -21,7 +21,7 @@ class LinuxCompiler < GccCompiler
     end
   end
 
-  def addLibSuffix(lib)
+  def add_lib_suffix(lib)
     if lib.forceLib
       return '-Wl,--no-whole-archive'
     else
@@ -29,11 +29,11 @@ class LinuxCompiler < GccCompiler
     end
   end
 
-  def startOfLibs
+  def start_of_libs()
     return ' -Wl,--start-group '
   end
 
-  def endOfLibs
+  def end_of_libs()
     return ' -Wl,--end-group '
   end
 

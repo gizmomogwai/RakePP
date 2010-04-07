@@ -7,19 +7,19 @@ class Compiler
     @compileflags = compileflags
   end
 
-  def addTasks(artifact)
+  def add_tasks(artifact)
     if (artifact.instance_of?(Exe)) then
-      addExeTasks(artifact)
+      add_exe_tasks(artifact)
     elsif (artifact.instance_of?(SourceLib)) then
-      addSourceLibTasks(artifact)
+      add_source_lib_tasks(artifact)
     elsif (artifact.instance_of?(ObjectFile)) then
-      addObjectTasks(artifact)
+      add_object_tasks(artifact)
     elsif (artifact.instance_of?(Framework)) then
-      addFrameworkTasks(artifact)
+      add_framework_tasks(artifact)
     elsif (artifact.instance_of?(BinaryLib)) then
-      addBinaryLibTasks(artifact)
+      add_binary_lib_tasks(artifact)
     elsif (artifact.instance_of?(SharedLib)) then
-      addSharedLibTasks(artifact)
+      add_shared_lib_tasks(artifact)
     else
       raise "unknown type " + artifact.to_s
     end

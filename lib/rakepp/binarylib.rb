@@ -7,7 +7,7 @@ class BinaryLib
     @libs = libs
     @includes = includes
     @path = path
-    compiler.addTasks(self)
+    compiler.add_tasks(self)
   end
 
 end

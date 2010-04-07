@@ -8,13 +8,13 @@ class LibHelper
 
   private
 
-  def addUnique(lib)
+  def add_unique(lib)
     @all_libs.delete(lib)
     @all_libs.push(lib)
   end
 
   def add(lib)
-    addUnique(lib)
+    add_unique(lib)
     lib.libs.each do |aLib|
       add(aLib)
     end

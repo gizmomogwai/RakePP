@@ -6,11 +6,11 @@ class OsxCompiler < GccCompiler
     @gui = gui
   end
 
-  def startOfSourceLibCommand(outname, artifact)
+  def start_of_source_lib_command(outname, artifact)
     return "libtool -static -arch_only #{@architecture} -o #{outname}"
   end
 
-  def startOfSharedLibCommand(libName, artifact)
+  def start_of_shared_lib_command(libName, artifact)
     name = artifact.options[:name]
     if name == nil
       name = File.basename(libName)
@@ -18,11 +18,11 @@ class OsxCompiler < GccCompiler
     return "g++ -arch #{@architecture} -dynamiclib -install_name #{name}"
   end
 
-  def sharedExtension
+  def shared_extension()
     return 'so'
   end
 
-  def addLib(task, lib)
+  def add_lib(task, lib)
     if (lib.instance_of?(Framework)) then
       return " -framework #{lib.name}"
     else
@@ -30,7 +30,7 @@ class OsxCompiler < GccCompiler
     end
   end
 
-  def doAdditionalWorkForExe(artifact)
+  def do_additional_work_for_exe(artifact)
     if @gui
       sh "/Developer/Tools/Rez -o #{artifact.outFile} appResources.r"
     end

@@ -14,7 +14,7 @@ class SourceLib
     end
     @privateDefines = privateDefines
     @forceLib = forceLib
-    compiler.addTasks(self)
+    compiler.add_tasks(self)
   end
 
   def tr_includes

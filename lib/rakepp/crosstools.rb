@@ -4,7 +4,7 @@ class CrossTools
     @compilerHash = compilerHash
   end
 
-  def sourceLib(compilers, base, name, sources, dependencies, includes, privateDefines=[], forceLib=false)
+  def source_lib(compilers, base, name, sources, dependencies, includes, privateDefines=[], forceLib=false)
     todo = get_compilers(compilers)
     return todo.inject(Hash.new) do |memo, pair|
       key = pair[0]

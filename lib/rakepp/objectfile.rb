@@ -6,9 +6,11 @@ class ObjectFile
     @targetDir = targetDir
     @includes = includes
     @privateDefines = privateDefines
-    compiler.addTasks(self)
+    compiler.add_tasks(self)
   end
-  def depFile()
+
+  def dep_file()
     return "#{outFile}.dependencies"
   end
+
 end
