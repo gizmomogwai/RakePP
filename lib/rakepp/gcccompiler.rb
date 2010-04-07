@@ -27,7 +27,7 @@ class GccCompiler < Compiler
       depFileTask.enhance(deps)
     end
 
-    outFile = file outName => ["#{depFile}.recreate", depFile] do | task |
+    outFile = file outName => ["#{outName}.apply"] do | task |
       command = "#{compiler(artifact)} -c #{defines(artifact)} #{includes(artifact)} -o #{outName} #{artifact.source.fullPath}"
       sh command
     end
@@ -37,6 +37,7 @@ class GccCompiler < Compiler
       if (deps)
         outFile.enhance(deps)
       end
+      outFile.enhance([depFile])
     end
 
     outFile.enhance([applyTask])
