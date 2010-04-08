@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake/gempackagetask'
 
 desc "Default Task"
-task :default => :package
+task :default => [:package, :reports]
 
 PKG_VERSION = '0.1.6.3'
 PKG_FILES = FileList[
@@ -33,4 +33,8 @@ end
 Rake::GemPackageTask.new(spec) do |pkg|
 #  pkg.need_tar = true
  # pkg.need_zip = true
+end
+
+task :reports do
+  sh 'roodi lib/**/*.rb'
 end
